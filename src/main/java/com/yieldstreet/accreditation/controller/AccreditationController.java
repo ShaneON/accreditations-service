@@ -19,7 +19,7 @@ public class AccreditationController {
     @PostMapping("/accreditation")
     public ResponseEntity<AccreditationResponse> createAccreditationStatus(
             @RequestBody AccreditationRequest request) {
-        AccreditationResponse response = new AccreditationResponse("Hello World");
+        AccreditationResponse response = accreditationService.processAccreditation(request);
         return ResponseEntity.ok(response);
     }
 }
