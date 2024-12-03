@@ -8,6 +8,6 @@ import lombok.Data;
 public class Accreditation {
     private String accreditationId;
     private String userId;
-    private String accreditationType;
+    private AccreditationType accreditationType;
     private AccreditationStatus status;
 }
