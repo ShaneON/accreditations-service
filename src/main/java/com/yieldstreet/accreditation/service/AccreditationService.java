@@ -17,7 +17,9 @@ public class AccreditationService {
 
     private final Map<String, Accreditation> accreditations = new HashMap<>();
 
-    public AccreditationResponseDTO processAccreditation(AccreditationRequestDTO request) {
+    public AccreditationResponseDTO processAccreditation(AccreditationRequestDTO request) throws APIException {
+
+        if (hasPendingAccreditation(request.getUserId())) throw new APIException("User already has a pending Accreditation.");
 
         String accreditationId = UUID.randomUUID().toString();
 
@@ -32,12 +34,34 @@ public class AccreditationService {
 
         if (accreditationToFinalize == null) throw new APIException("Accreditation does not exist.");
 
-        if (accreditationToFinalize.getStatus() != AccreditationStatus.PENDING) {
-            throw new APIException("Cannot update status of Accreditation that has already been finalized.");
-        }
+        validateFinalizeRequest(accreditationToFinalize, outcome);
 
         accreditationToFinalize.setStatus(AccreditationStatus.valueOf(outcome.toString()));
 
         return new AccreditationResponseDTO(accreditationToFinalize.getAccreditationId());
+    }
+
+    private void validateFinalizeRequest(Accreditation accreditation, AccreditationOutcome outcome) throws APIException {
+        switch (accreditation.getStatus()) {
+            case PENDING:
+                accreditation.setStatus(AccreditationStatus.valueOf(outcome.toString()));
+                break;
+            case CONFIRMED:
+                if (outcome == AccreditationOutcome.EXPIRED) accreditation.setStatus(AccreditationStatus.valueOf(outcome.toString()));
+                break;
+            case EXPIRED:
+                throw new APIException("Accreditation is already in EXPIRED state.");
+            case FAILED:
+                throw new APIException("Accreditation is already in FAILED state.");
+        }
+    }
+
+    private boolean hasPendingAccreditation(String userId) {
+        for (Accreditation a : accreditations.values()) {
+            if (a.getUserId().equals(userId) && a.getStatus() == AccreditationStatus.PENDING) {
+                return true;
+            }
+        }
+        return false;
     }
 }

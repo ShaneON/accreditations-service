@@ -21,7 +21,7 @@ public class AccreditationController {
 
     @PostMapping("/accreditation")
     public ResponseEntity<AccreditationResponseDTO> createAccreditationStatus(
-            @Valid @RequestBody AccreditationRequestDTO request) {
+            @Valid @RequestBody AccreditationRequestDTO request) throws APIException {
         AccreditationResponseDTO response = accreditationService.processAccreditation(request);
         return ResponseEntity.ok(response);
     }
