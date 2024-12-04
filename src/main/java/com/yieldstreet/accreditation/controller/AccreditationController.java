@@ -1,10 +1,11 @@
 package com.yieldstreet.accreditation.controller;
 
+import com.yieldstreet.accreditation.dto.AccreditationRequestDTO;
 import com.yieldstreet.accreditation.exception.APIException;
-import com.yieldstreet.accreditation.model.AccreditationFinalizationRequest;
-import com.yieldstreet.accreditation.model.AccreditationRequest;
-import com.yieldstreet.accreditation.model.AccreditationResponse;
+import com.yieldstreet.accreditation.dto.AccreditationFinalizationRequestDTO;
+import com.yieldstreet.accreditation.dto.AccreditationResponseDTO;
 import com.yieldstreet.accreditation.service.AccreditationService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,17 +20,17 @@ public class AccreditationController {
     }
 
     @PostMapping("/accreditation")
-    public ResponseEntity<AccreditationResponse> createAccreditationStatus(
-            @RequestBody AccreditationRequest request) {
-        AccreditationResponse response = accreditationService.processAccreditation(request);
+    public ResponseEntity<AccreditationResponseDTO> createAccreditationStatus(
+            @Valid @RequestBody AccreditationRequestDTO request) {
+        AccreditationResponseDTO response = accreditationService.processAccreditation(request);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/accreditation/{accreditationId}")
-    public ResponseEntity<AccreditationResponse> finalizeAccreditation(
+    public ResponseEntity<AccreditationResponseDTO> finalizeAccreditation(
             @PathVariable String accreditationId,
-            @RequestBody AccreditationFinalizationRequest request) throws APIException {
-        AccreditationResponse response = accreditationService.finalizeAccreditation(accreditationId, request.getOutcome());
+            @RequestBody AccreditationFinalizationRequestDTO request) throws APIException {
+        AccreditationResponseDTO response = accreditationService.finalizeAccreditation(accreditationId, request.getOutcome());
         return ResponseEntity.ok(response);
     }
 }
