@@ -4,16 +4,13 @@ import com.yieldstreet.accreditation.model.Accreditation;
 import com.yieldstreet.accreditation.model.AccreditationStatus;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
 public class AccreditationRepository {
 
-//    private final Map<String, Accreditation> accreditations = new HashMap<>();
     private final List<Accreditation> accreditations = new LinkedList<>();
 
     public void saveAccreditation(Accreditation accreditation) {
@@ -25,6 +22,12 @@ public class AccreditationRepository {
                 .filter(accreditation -> (accreditation.getAccreditationId().equals(id)))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No match found!"));
+    }
+
+    public List<Accreditation> findAccreditationsForUser(String userId) {
+        return accreditations.stream()
+                .filter(accreditation -> (accreditation.getUserId().equals(userId)))
+                .collect(Collectors.toList());
     }
 
     public boolean doesExistPendingAccreditationForUser(String userId) {

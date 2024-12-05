@@ -1,6 +1,7 @@
 package com.yieldstreet.accreditation.controller;
 
 import com.yieldstreet.accreditation.dto.AccreditationRequestDTO;
+import com.yieldstreet.accreditation.dto.UserAccreditationsResponseDTO;
 import com.yieldstreet.accreditation.exception.APIException;
 import com.yieldstreet.accreditation.dto.AccreditationFinalizationRequestDTO;
 import com.yieldstreet.accreditation.dto.AccreditationResponseDTO;
@@ -35,4 +36,12 @@ public class AccreditationController {
         AccreditationResponseDTO response = accreditationService.finalizeAccreditation(accreditationId, request.getOutcome());
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/{userId}/accreditation")
+    public ResponseEntity<UserAccreditationsResponseDTO> getAllAccreditationsForUser(
+            @PathVariable String userId) {
+        UserAccreditationsResponseDTO response = accreditationService.findAllAccreditationsForUser(userId);
+        return ResponseEntity.ok(response);
+    }
+
 }

@@ -1,6 +1,8 @@
 package com.yieldstreet.accreditation.service;
 
 import com.yieldstreet.accreditation.dto.AccreditationRequestDTO;
+import com.yieldstreet.accreditation.dto.AccreditationStatusDTO;
+import com.yieldstreet.accreditation.dto.UserAccreditationsResponseDTO;
 import com.yieldstreet.accreditation.exception.APIException;
 import com.yieldstreet.accreditation.model.Accreditation;
 import com.yieldstreet.accreditation.dto.AccreditationResponseDTO;
@@ -10,7 +12,10 @@ import com.yieldstreet.accreditation.repository.AccreditationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class AccreditationService {
@@ -39,6 +44,21 @@ public class AccreditationService {
         accreditationToFinalize.setStatus(AccreditationStatus.valueOf(outcome.toString()));
 
         return new AccreditationResponseDTO(accreditationToFinalize.getAccreditationId());
+    }
+
+    public UserAccreditationsResponseDTO findAllAccreditationsForUser(String userId) {
+        List<Accreditation> accreditations = accreditationRepository.findAccreditationsForUser(userId);
+
+        Map<String, AccreditationStatusDTO> accreditationStatusMap = accreditations.stream()
+                .collect(Collectors.toMap(
+                        Accreditation::getAccreditationId,
+                        accreditation -> new AccreditationStatusDTO(
+                                accreditation.getAccreditationType(),
+                                accreditation.getStatus()
+                        )
+                ));
+
+        return new UserAccreditationsResponseDTO(userId, accreditationStatusMap);
     }
 
     private void validateFinalizeRequest(Accreditation accreditation, AccreditationOutcome outcome) throws APIException {
