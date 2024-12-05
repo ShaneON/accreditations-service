@@ -6,6 +6,7 @@ import com.yieldstreet.accreditation.dto.AccreditationFinalizationRequestDTO;
 import com.yieldstreet.accreditation.dto.AccreditationResponseDTO;
 import com.yieldstreet.accreditation.service.AccreditationService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class AccreditationController {
 
-    private final AccreditationService accreditationService;
+    @Autowired
+    AccreditationService accreditationService;
 
     public AccreditationController(AccreditationService accreditationService) {
         this.accreditationService = accreditationService;
@@ -29,7 +31,7 @@ public class AccreditationController {
     @PutMapping("/accreditation/{accreditationId}")
     public ResponseEntity<AccreditationResponseDTO> finalizeAccreditation(
             @PathVariable String accreditationId,
-            @RequestBody AccreditationFinalizationRequestDTO request) throws APIException {
+            @Valid @RequestBody AccreditationFinalizationRequestDTO request) throws APIException {
         AccreditationResponseDTO response = accreditationService.finalizeAccreditation(accreditationId, request.getOutcome());
         return ResponseEntity.ok(response);
     }
