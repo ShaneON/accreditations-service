@@ -24,6 +24,10 @@ public class AccreditationRepository {
                 .orElseThrow(() -> new RuntimeException("No match found!"));
     }
 
+    public List<Accreditation> findAllAccreditations() {
+        return accreditations;
+    }
+
     public List<Accreditation> findAccreditationsForUser(String userId) {
         return accreditations.stream()
                 .filter(accreditation -> (accreditation.getUserId().equals(userId)))

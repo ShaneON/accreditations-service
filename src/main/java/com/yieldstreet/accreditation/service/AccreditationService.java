@@ -12,6 +12,7 @@ import com.yieldstreet.accreditation.repository.AccreditationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -28,7 +29,7 @@ public class AccreditationService {
             throw new APIException("User already has a pending Accreditation.");
 
         String accreditationId = UUID.randomUUID().toString();
-        Accreditation pendingAccreditation = new Accreditation(accreditationId, request.getUserId(), request.getAccreditationType(), AccreditationStatus.PENDING);
+        Accreditation pendingAccreditation = new Accreditation(accreditationId, request.getUserId(), request.getAccreditationType(), AccreditationStatus.PENDING, LocalDateTime.now());
 
         accreditationRepository.saveAccreditation(pendingAccreditation);
 
@@ -65,9 +66,13 @@ public class AccreditationService {
         switch (accreditation.getStatus()) {
             case PENDING:
                 accreditation.setStatus(AccreditationStatus.valueOf(outcome.toString()));
+                accreditation.setLastUpdateTime(LocalDateTime.now());
                 break;
             case CONFIRMED:
-                if (outcome == AccreditationOutcome.EXPIRED) accreditation.setStatus(AccreditationStatus.valueOf(outcome.toString()));
+                if (outcome == AccreditationOutcome.EXPIRED) {
+                    accreditation.setStatus(AccreditationStatus.valueOf(outcome.toString()));
+                    accreditation.setLastUpdateTime(LocalDateTime.now());
+                }
                 break;
             case EXPIRED:
                 throw new APIException("Accreditation is already in EXPIRED state.");
