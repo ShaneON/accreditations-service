@@ -20,19 +20,25 @@ public class APIExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             errors.put(fieldName, error.getDefaultMessage());
         });
-        return errors;
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<String> handleValidationException(HttpMessageNotReadableException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    public ResponseEntity<Map<String, String>> handleValidationEnumException(HttpMessageNotReadableException ex) {
+        Map<String, String> errors = new HashMap<>();
+        String message = null;
+        if(ex.getMessage().contains("AccreditationType"))
+            message = "Accepted values are: BY_INCOME, BY_NET_WORTH";
+        else if (ex.getMessage().contains("AccreditationOutcome"))
+            message = "Accepted values are: CONFIRMED, FAILED, EXPIRED";
+        errors.put("error", message);
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 }

@@ -1,7 +1,7 @@
 package com.yieldstreet.accreditation.service;
 
 import com.yieldstreet.accreditation.dto.AccreditationRequestDTO;
-import com.yieldstreet.accreditation.dto.AccreditationStatusDTO;
+import com.yieldstreet.accreditation.dto.AccreditationStatusResponseDTO;
 import com.yieldstreet.accreditation.dto.UserAccreditationsResponseDTO;
 import com.yieldstreet.accreditation.exception.APIException;
 import com.yieldstreet.accreditation.model.Accreditation;
@@ -50,10 +50,10 @@ public class AccreditationService {
     public UserAccreditationsResponseDTO findAllAccreditationsForUser(String userId) {
         List<Accreditation> accreditations = accreditationRepository.findAccreditationsForUser(userId);
 
-        Map<String, AccreditationStatusDTO> accreditationStatusMap = accreditations.stream()
+        Map<String, AccreditationStatusResponseDTO> accreditationStatusMap = accreditations.stream()
                 .collect(Collectors.toMap(
                         Accreditation::getAccreditationId,
-                        accreditation -> new AccreditationStatusDTO(
+                        accreditation -> new AccreditationStatusResponseDTO(
                                 accreditation.getAccreditationType(),
                                 accreditation.getStatus()
                         )

@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class AccreditationStatusDTO {
+public class AccreditationStatusResponseDTO {
     private AccreditationType accreditationType;
-    private AccreditationStatus accreditationStatus;
+    private AccreditationStatus status;
 }

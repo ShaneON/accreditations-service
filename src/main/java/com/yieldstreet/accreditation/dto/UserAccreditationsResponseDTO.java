@@ -9,5 +9,5 @@ import java.util.Map;
 @AllArgsConstructor
 public class UserAccreditationsResponseDTO {
     private String userId;
-    private Map<String, AccreditationStatusDTO> accreditationStatuses;
+    private Map<String, AccreditationStatusResponseDTO> accreditationStatuses;
 }
