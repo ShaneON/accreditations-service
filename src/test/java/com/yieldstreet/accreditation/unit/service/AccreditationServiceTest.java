@@ -88,6 +88,7 @@ class AccreditationServiceTest {
         assertEquals(2, response.getAccreditationStatuses().size());
 
         Map<String, AccreditationStatusResponseDTO> accreditationStatuses = response.getAccreditationStatuses();
+
         assertEquals(AccreditationType.BY_INCOME, accreditationStatuses.get("id1").getAccreditationType());
         assertEquals(AccreditationStatus.CONFIRMED, accreditationStatuses.get("id1").getStatus());
 
@@ -140,7 +141,7 @@ class AccreditationServiceTest {
     }
 
     @Test
-    void testFinalizeAccreditation_Failure_AlreadyExpired() {
+    void testFinalizeAccreditation_Failure_AlreadyExpired() throws APIException {
         String accreditationId = "acc456";
         Accreditation accreditation = new Accreditation(
                 accreditationId,
@@ -161,7 +162,7 @@ class AccreditationServiceTest {
     }
 
     @Test
-    void testFinalizeAccreditation_Failure_AlreadyFailed() {
+    void testFinalizeAccreditation_Failure_AlreadyFailed() throws APIException {
         String accreditationId = "acc456";
         Accreditation accreditation = new Accreditation(
                 accreditationId,
@@ -182,7 +183,7 @@ class AccreditationServiceTest {
     }
 
     @Test
-    void testFinalizeAccreditation_Failure_AccreditationDoesNotExist() {
+    void testFinalizeAccreditation_Failure_AccreditationDoesNotExist() throws APIException {
         String accreditationId = "id";
         when(accreditationRepository.findAccreditation(accreditationId)).thenReturn(null);
 

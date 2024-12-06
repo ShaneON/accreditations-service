@@ -1,5 +1,6 @@
 package com.yieldstreet.accreditation.repository;
 
+import com.yieldstreet.accreditation.exception.APIException;
 import com.yieldstreet.accreditation.model.Accreditation;
 import com.yieldstreet.accreditation.model.AccreditationStatus;
 import org.springframework.stereotype.Repository;
@@ -17,11 +18,11 @@ public class AccreditationRepository {
         accreditations.add(accreditation);
     }
 
-    public Accreditation findAccreditation(String id) {
+    public Accreditation findAccreditation(String id) throws APIException {
         return accreditations.stream()
                 .filter(accreditation -> (accreditation.getAccreditationId().equals(id)))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("No match found!"));
+                .orElseThrow(() -> new APIException("No Accreditations found with id: " + id));
     }
 
     public List<Accreditation> findAllAccreditations() {
