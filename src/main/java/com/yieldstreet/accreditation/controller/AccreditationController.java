@@ -39,7 +39,7 @@ public class AccreditationController {
 
     @GetMapping("/{userId}/accreditation")
     public ResponseEntity<UserAccreditationsResponseDTO> getAllAccreditationsForUser(
-            @PathVariable String userId) {
+            @PathVariable String userId) throws APIException {
         UserAccreditationsResponseDTO response = accreditationService.findAllAccreditationsForUser(userId);
         return ResponseEntity.ok(response);
     }

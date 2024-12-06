@@ -72,7 +72,7 @@ class AccreditationServiceTest {
     }
 
     @Test
-    void testFindAllAccreditationsForUser() {
+    void testFindAllAccreditationsForUser() throws APIException {
         // Arrange
         String userId = "user123";
         List<Accreditation> accreditations = Arrays.asList(

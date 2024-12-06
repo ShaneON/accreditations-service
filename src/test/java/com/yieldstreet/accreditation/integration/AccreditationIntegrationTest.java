@@ -180,6 +180,16 @@ public class AccreditationIntegrationTest {
     }
 
     @Test
+    void testGetAllAccreditationsForUser_Failure_NoneFoundForUser() throws Exception {
+        String userId = "user123";
+
+        mockMvc.perform(get("/user/" + userId + "/accreditation")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("No accreditations found for userId: " + userId));
+    }
+
+    @Test
     void testAccreditationScheduler() throws Exception {
         accreditationRepository.saveAccreditation(new Accreditation(
                 "acc1", "user1", AccreditationType.BY_NET_WORTH, AccreditationStatus.CONFIRMED,

@@ -47,8 +47,10 @@ public class AccreditationService {
         return new AccreditationResponseDTO(accreditationToFinalize.getAccreditationId());
     }
 
-    public UserAccreditationsResponseDTO findAllAccreditationsForUser(String userId) {
+    public UserAccreditationsResponseDTO findAllAccreditationsForUser(String userId) throws APIException {
         List<Accreditation> accreditations = accreditationRepository.findAccreditationsForUser(userId);
+
+        if (accreditations.isEmpty()) throw new APIException("No accreditations found for userId: " + userId);
 
         Map<String, AccreditationStatusResponseDTO> accreditationStatusMap = accreditations.stream()
                 .collect(Collectors.toMap(
