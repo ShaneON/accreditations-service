@@ -36,12 +36,9 @@ public class AccreditationRepository {
     }
 
     public boolean doesExistPendingAccreditationForUser(String userId) {
-        for (Accreditation a : accreditations) {
-            if (a.getUserId().equals(userId) && a.getStatus() == AccreditationStatus.PENDING) {
-                return true;
-            }
-        }
-        return false;
+        return accreditations.stream()
+                .anyMatch(accreditation -> accreditation.getUserId().equals(userId)
+                        && accreditation.getStatus() == AccreditationStatus.PENDING);
     }
 
 }
